@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <data>
+        <record id="paperformat_lowmargin" model="report.paperformat">
+            <field name="name">European A4 low margin</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">60</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">40</field>
+            <field name="dpi">90</field>
+       </record>
+        <record id="maintenance_request_report" model="ir.actions.report">
+            <field name="name">Maintenance</field>
+            <field name="model">employe.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">eyk_attendance_modification.emoloyee_report</field>
+            <field name="report_file">eyk_attendance_modification.emoloyee_report</field>
+            <field name="print_report_name">'Attendance Report Of  - %s,%s' % (object.month,object.year)</field>
+            <field name="binding_model_id" ref="model_hr_employee"/>
+            <field name="binding_type">report</field>
+        </record>
+         <record id="eyk_attendance_modification.maintenance_request_report" model="ir.actions.report">
+            <field name="paperformat_id" ref="eyk_attendance_modification.paperformat_lowmargin" />
+       </record>
+    </data>
+</odoo>
