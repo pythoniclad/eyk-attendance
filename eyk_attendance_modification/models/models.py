@@ -100,13 +100,13 @@ class Employee(models.Model):
                                 partner_list.append(res_user_id.partner_id.id)
                                 content = "Please Find Attachment"
                                 report_mail = {
-                                    'subject': "Employee Attandance Report",
+                                    'subject': "Employee Attendance Report",
                                     'email_to': manager.name,
                                     'author_id': res_user_id.partner_id.id,
                                     'body_html': content,
                                 }
                                 name = "my attachment"
-                                pdf = self.env.ref('eyk_attendance_modification.single_manager').render_qweb_pdf(
+                                pdf = self.env.ref('eyk_attendance_modification.attendance_report_for_employees').render_qweb_pdf(
                                     manager.id)
                                 b64_pdf = base64.b64encode(pdf[0])
                                 attachment = self.env['ir.attachment'].create({

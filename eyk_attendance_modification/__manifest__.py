@@ -10,11 +10,9 @@
         'data/cron.xml',
         "views/views.xml",
 
-        'wizards/employee_order_view.xml',
-        'reports/employee_report_action.xml',
-        'reports/employee_report_template.xml',
-        'reports/single_manager_action.xml',
-        'reports/single_manager_report_template.xml',
+        'wizards/employee_attendance_wizard_view.xml',
+        'reports/attendance_report.xml',
+        'reports/report.xml',
     ],
     'assets': {
         'web.assets_backend': [

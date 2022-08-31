@@ -8,13 +8,29 @@
     <!--    </t>-->
     <t t-inherit="hr_attendance.HrAttendanceGreetingMessage" t-inherit-mode="extension" owl="1">
         <xpath expr="//t[@t-if='widget.total_overtime_float &gt; 0']"  position="before">
-            <t t-if="widget.attendance.check_out">
+<!--            <t t-if="widget.attendance.check_out">-->
+            <div class="alert alert-info h4 mt0" role="status">
+                    Total Workhours this month: <b><t t-esc="widget.resource_monthly_limit"/></b>
+                <br/>
+                Workhours left this month: <b><t t-esc="widget.hours_left_this_month"/></b>
+                </div>
+            <!--            </t>-->
+        </xpath>
+        <xpath expr="//div/div/t/t[@t-else='']"  position="replace">
+            <t t-else="">
+                <h1 class="mb0">Welcome <t t-esc="widget.employee_name"/>!</h1>
+                <h2 class="o_hr_attendance_message_message mt4 mb24"/>
+                <div class="alert alert-info h2 mt0" role="status">
+                    Checked in at <b><t t-esc="widget.attendance.check_in_time"/></b>
+                </div>
                 <div class="alert alert-info h4 mt0" role="status">
                     Total Workhours this month: <b><t t-esc="widget.resource_monthly_limit"/></b>
                     <br/>
                     Workhours left this month: <b><t t-esc="widget.hours_left_this_month"/></b>
                 </div>
-            </t>
+                <h3 class="o_hr_attendance_random_message mb24"/>
+                <div class="o_hr_attendance_warning_message mt24 alert alert-warning" style="display:none" role="alert"/>
+                    </t>
         </xpath>
     </t>
 </template>
