@@ -24,7 +24,7 @@
                     Checked in at <b><t t-esc="widget.attendance.check_in_time"/></b>
                 </div>
                 <div class="alert alert-info h4 mt0" role="status">
-                    Total Workhours this month: <b><t t-esc="widget.resource_monthly_limit"/></b>
+                    Total workhours monthly limit: <b><t t-esc="widget.resource_monthly_limit"/></b>
                     <br/>
                     Workhours left this month: <b><t t-esc="widget.hours_left_this_month"/></b>
                 </div>

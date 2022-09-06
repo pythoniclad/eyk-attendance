@@ -1,23 +1,47 @@
-
 import pytz
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import ValidationError
 from datetime import date, datetime, time
 from odoo import models, fields, api, exceptions, _
 from odoo.tools import float_round
 import base64
+from datetime import timedelta, date
 import datetime
 
 
 class Employee(models.Model):
     _inherit = 'hr.employee'
 
-    resource_monthly_limit = fields.Integer("Monthly Work Limit", default=0)
+    resource_monthly_limit = fields.Float("Monthly Work Limit", default=0.0)
+    has_reached_limit = fields.Boolean("Has Reached Limit?")
     hours_this_month = fields.Float(
         compute='_compute_hours_this_month', groups="hr_attendance.group_hr_attendance_user")
     hours_left_this_month = fields.Float(
         compute='_compute_hours_this_month', groups="hr_attendance.group_hr_attendance_user")
     hours_this_month_display = fields.Char(
         compute='_compute_hours_this_month', groups="hr_attendance.group_hr_attendance_user")
+
+    def reset_workhours_monthly(self):
+        employees = self.env['hr.employee'].sudo().search([])
+        for employee in employees:
+            employee.sudo().write({
+                    'hours_this_month': 0.00,
+                    'hours_left_this_month': 0.00,
+                    'hours_this_month_display': '',
+                    'has_reached_limit': False,
+                })
+
+    def detect_workhours_limit(self):
+        now = fields.Datetime.now()
+        now_utc = pytz.utc.localize(now)
+        employees = self.env['hr.employee'].sudo().search([('last_check_in', '!=', False), ('last_check_out', '=', False)])
+        for employee in employees:
+            if employee.hours_left_this_month <= 0.06:
+                tz = pytz.timezone(employee.tz or 'UTC')
+                now_tz = now_utc.astimezone(tz)
+                if not employee.last_attendance_id.check_out:
+                    employee.last_attendance_id.check_out = datetime.datetime.now()
+                employee.has_reached_limit = True
 
     def _compute_hours_this_month(self):
         now = fields.Datetime.now()
@@ -39,8 +63,8 @@ class Employee(models.Model):
 
             hours = 0
             for attendance in attendances:
-                check_in = max(attendance.check_in, start_naive)
-                check_out = min(attendance.check_out, end_naive)
+                check_in = attendance.check_in
+                check_out = attendance.check_out
                 hours += (check_out - check_in).total_seconds() / 3600.0
 
             employee.hours_this_month = round(hours, 2)
@@ -77,62 +101,27 @@ class Employee(models.Model):
     date_from = fields.Date('Date from')
     date_to = fields.Date('Date to')
 
-    # send mail functionality
-    def send_employee_report(self):
-        employee_ids = self.env['hr.employee'].search([])
-        manager_ids = []
-        for employee in employee_ids:
-            if employee.parent_id and employee.parent_id not in manager_ids:
-                manager_ids.append(employee.parent_id)
-                for manager in manager_ids:
-                    for res_user_id in self.env['res.users'].search([]):
-                        partner_list = []
-                        email_to = []
-                        report_mail = {}
-                        now = datetime.now()
-                        year = now.year
-                        month = now.month
-                        month_date = date(int(now.year), int(now.month), 1)
-                        date_from = month_date.replace(day=1)
-                        today_date = date.today()
-                        if today_date == date_from:
-                            if res_user_id.has_group('hr.group_hr_manager'):
-                                partner_list.append(res_user_id.partner_id.id)
-                                content = "Please Find Attachment"
-                                report_mail = {
-                                    'subject': "Employee Attendance Report",
-                                    'email_to': manager.name,
-                                    'author_id': res_user_id.partner_id.id,
-                                    'body_html': content,
-                                }
-                                name = "my attachment"
-                                pdf = self.env.ref('eyk_attendance_modification.attendance_report_for_employees').render_qweb_pdf(
-                                    manager.id)
-                                b64_pdf = base64.b64encode(pdf[0])
-                                attachment = self.env['ir.attachment'].create({
-                                    'name': 'Attendance report for the ' + manager.name,
-                                    'type': 'binary',
-                                    'datas': b64_pdf,
-                                    'res_model': self._name,
-                                    'res_id': self.id,
-                                    'mimetype': 'application/x-pdf'
-                                })
-
-                                if report_mail:
-                                    mail_id = res_user_id.env['mail.mail'].sudo().create(report_mail)
-                                    if mail_id:
-                                        mail_id.send(res_user_id.id)
-                                        mail_id.attachment_ids = [(6, 0, [attachment.id])]
-
-
-from datetime import date
-from datetime import timedelta
-
 
 class Attendance(models.Model):
     _inherit = "hr.attendance"
 
     is_entry_splitted = fields.Boolean('Is Split?', default=False)
+
+    @api.model
+    def create(self, vals):
+        if 'employee_id' in vals:
+            employee_id = self.env['hr.employee'].browse(vals.get("employee_id"))
+            if employee_id:
+                if employee_id.has_reached_limit:
+                    raise ValidationError(_("You have reached your monthly limit\nContact your admin!"))
+        employee = super(Attendance, self).create(vals)
+        return employee
+
+    def write(self, vals):
+        employee = super(Attendance, self).write(vals)
+        if employee:
+            print(employee)
+        return employee
 
     def split_entries(self):
         prev_day = datetime.datetime.today() - datetime.timedelta(days=1)
@@ -167,5 +156,3 @@ class Attendance(models.Model):
                         'check_out': check_out,
                         'is_entry_splitted': True,
                     })
-
-

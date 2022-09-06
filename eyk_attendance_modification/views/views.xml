@@ -6,8 +6,9 @@
         <field name="inherit_id" ref="hr.view_employee_form" />
         <field name="arch" type="xml">
             <xpath expr="//group[@name='identification_group']" position="inside">
-                <field name="resource_monthly_limit" widget="integer" options="{'type': 'number'}" />
+                <field name="resource_monthly_limit" />
                 <field name="hours_this_month" />
+                <field name="hours_left_this_month"/>
 <!--                <field name="hours_this_month_display"/>-->
             </xpath>
         </field>
