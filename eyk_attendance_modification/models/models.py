@@ -127,7 +127,7 @@ class Attendance(models.Model):
         prev_day = datetime.datetime.today() - datetime.timedelta(days=1)
         print('prev-day: ',prev_day)
         current = date.today() - timedelta(days = 0)
-        prev = date.today() - timedelta(days = 1)
+        prev = date.today() - timedelta(days = 2)
         attendances = self.env['hr.attendance'].sudo().search([('check_in', '>=', prev),
                                                                ('check_out', '>=', prev),
                                                                ('check_out', '<', current),
