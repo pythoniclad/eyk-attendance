@@ -1,5 +1,7 @@
 odoo.define('attendance_employee_picture.attendance_greeting', function (require) {
 "use strict";
+var core = require('web.core');
+var _t = core._t;
 var greeting_message = require('hr_attendance.greeting_message');
 greeting_message.include({
  	init: function(parent, action) {
@@ -11,7 +13,7 @@ greeting_message.include({
        		console.log(action)
        		if (action.hours_left_this_month) {
             var duration = moment.duration(action.hours_left_this_month, "hours");
-            this.hours_left_this_month = duration.hours() + ' hours, ' + duration.minutes() + ' minutes';
+            this.hours_left_this_month = duration.hours() + _t(' hours, ') + duration.minutes() + _t(' minutes');
         }
        	}
 

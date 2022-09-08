@@ -101,3 +101,16 @@ msgstr ""
 "Du hast dein monatliches Stundenlimit erreicht. Bitte Spreche mit deinem "
 "Vorgesetzten!"
 
+#. module: eyk_attendance_modification
+#. openerp-web
+#: code:addons/eyk_attendance_modification/static/src/js/scripts.js:0
+#, python-format
+msgid " hours, "
+msgstr " Stunden, "
+
+#. module: eyk_attendance_modification
+#. openerp-web
+#: code:addons/eyk_attendance_modification/static/src/js/scripts.js:0
+#, python-format
+msgid " minutes"
+msgstr " Minuten"
