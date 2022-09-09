@@ -42,6 +42,8 @@ class Employee(models.Model):
                 if not employee.last_attendance_id.check_out:
                     employee.last_attendance_id.check_out = datetime.datetime.now()
                 employee.has_reached_limit = True
+            else:
+                employee.has_reached_limit = False
 
     def _compute_hours_this_month(self):
         now = fields.Datetime.now()
@@ -58,7 +60,6 @@ class Employee(models.Model):
                 ('employee_id', '=', employee.id),
                 '&',
                 ('check_in', '<=', end_naive),
-                ('check_out', '>=', start_naive),
             ])
 
             hours = 0
@@ -138,16 +139,15 @@ class Attendance(models.Model):
         hours = 0
         for attendance in attendances:
             print('worked_hours: ',attendance.worked_hours)
-            worked_hours = attendance.worked_hours
             check_out = attendance.check_out
-            if attendance.worked_hours > 6.0:
+            if attendance.worked_hours > 6.5:
                 new_check_out = attendance.check_in + timedelta(hours=6)
                 print(attendance.check_in)
                 attendance.sudo().write({
                     'check_out': new_check_out,
                     'is_entry_splitted': True,
                 })
-                if new_check_out and check_out worked_hours > 6.5:
+                if new_check_out and check_out:
                     new_check_in = new_check_out + timedelta(minutes=30)
                     delta = new_check_out - check_out
                     new_worked_hours = delta.total_seconds() / 3600.0
