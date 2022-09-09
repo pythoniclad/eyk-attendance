@@ -139,14 +139,14 @@ class Attendance(models.Model):
         for attendance in attendances:
             print('worked_hours: ',attendance.worked_hours)
             check_out = attendance.check_out
-            if attendance.worked_hours > 6.5:
+            if attendance.worked_hours > 6.0:
                 new_check_out = attendance.check_in + timedelta(hours=6)
                 print(attendance.check_in)
                 attendance.sudo().write({
                     'check_out': new_check_out,
                     'is_entry_splitted': True,
                 })
-                if new_check_out and check_out:
+                if new_check_out and check_out attendance.worked_hours > 6.5:
                     new_check_in = new_check_out + timedelta(minutes=30)
                     delta = new_check_out - check_out
                     new_worked_hours = delta.total_seconds() / 3600.0
