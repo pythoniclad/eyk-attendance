@@ -1,0 +1,116 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* eyk_attendance_modification
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0-20220908\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-08 13:58+0000\n"
+"PO-Revision-Date: 2022-09-08 16:00+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"X-Generator: Poedit 3.1.1\n"
+
+
+#. module: eyk_attendance_modification
+#: model:ir.model,name:eyk_attendance_modification.model_hr_attendance
+msgid "Attendance"
+msgstr "Anwesenheit"
+
+
+#. module: eyk_attendance_modification
+#: model:ir.model,name:eyk_attendance_modification.model_hr_employee
+#: model:ir.model.fields,field_description:eyk_attendance_modification.field_hr_attendance_employee_report__employee_ids
+msgid "Employee"
+msgstr "Mitarbeiter"
+
+#. module: eyk_attendance_modification
+#: model:ir.actions.server,name:eyk_attendance_modification.detect_workhours_limit_action_ir_actions_server
+#: model:ir.cron,cron_name:eyk_attendance_modification.detect_workhours_limit_action
+#: model:ir.cron,name:eyk_attendance_modification.detect_workhours_limit_action
+msgid "HR: Detect Workhours Limit"
+msgstr ""
+
+#. module: eyk_attendance_modification
+#: model:ir.model.fields,field_description:eyk_attendance_modification.field_hr_employee__hours_left_this_month
+msgid "Hours Left This Month"
+msgstr "Stunden übrig"
+
+#. module: eyk_attendance_modification
+#: model:ir.model.fields,field_description:eyk_attendance_modification.field_hr_employee__hours_this_month
+msgid "Hours This Month"
+msgstr "Stunden diesen Monat"
+
+#. module: eyk_attendance_modification
+#: model:ir.model.fields,field_description:eyk_attendance_modification.field_hr_employee__hours_this_month_display
+msgid "Hours This Month Display"
+msgstr "Stunden diesen Monat Display"
+
+#. module: eyk_attendance_modification
+#: model:ir.model.fields,field_description:eyk_attendance_modification.field_hr_attendance_employee_report__month
+msgid "Month"
+msgstr "Monat"
+
+#. module: eyk_attendance_modification
+#: model:ir.model.fields,field_description:eyk_attendance_modification.field_hr_employee__resource_monthly_limit
+msgid "Monthly Work Limit"
+msgstr "Monatliches Stundenlimit"
+
+
+#. module: eyk_attendance_modification
+#. openerp-web
+#: code:addons/eyk_attendance_modification/static/src/xml/template.xml:0
+#, python-format
+msgid "Total Workhours this month:"
+msgstr "Gesamtstunden diesen Monat:"
+
+#. module: eyk_attendance_modification
+#. openerp-web
+#: code:addons/eyk_attendance_modification/static/src/xml/template.xml:0
+#, python-format
+msgid "Total workhours monthly limit:"
+msgstr "Monatliches Stundenlimit:"
+
+#. module: eyk_attendance_modification
+#. openerp-web
+#: code:addons/eyk_attendance_modification/static/src/xml/template.xml:0
+#, python-format
+msgid "Welcome"
+msgstr ""
+
+#. module: eyk_attendance_modification
+#. openerp-web
+#: code:addons/eyk_attendance_modification/static/src/xml/template.xml:0
+#, python-format
+msgid "Workhours left this month:"
+msgstr "Stunden übrig diesen Monat:"
+
+#. module: eyk_attendance_modification
+#: code:addons/eyk_attendance_modification/models/models.py:0
+#, python-format
+msgid ""
+"You have reached your monthly limit\n"
+"Contact your admin!"
+msgstr ""
+"Du hast dein monatliches Stundenlimit erreicht. Bitte Spreche mit deinem "
+"Vorgesetzten!"
+
+#. module: eyk_attendance_modification
+#. openerp-web
+#: code:addons/eyk_attendance_modification/static/src/js/scripts.js:0
+#, python-format
+msgid " hours, "
+msgstr " Stunden, "
+
+#. module: eyk_attendance_modification
+#. openerp-web
+#: code:addons/eyk_attendance_modification/static/src/js/scripts.js:0
+#, python-format
+msgid " minutes"
+msgstr " Minuten"

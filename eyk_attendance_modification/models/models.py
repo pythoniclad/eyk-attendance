@@ -4,7 +4,6 @@ from odoo.exceptions import ValidationError
 from datetime import date, datetime, time
 from odoo import models, fields, api, exceptions, _
 from odoo.tools import float_round
-import base64
 from datetime import timedelta, date
 import datetime
 
@@ -36,12 +35,22 @@ class Employee(models.Model):
         now_utc = pytz.utc.localize(now)
         employees = self.env['hr.employee'].sudo().search([('last_check_in', '!=', False), ('last_check_out', '=', False)])
         for employee in employees:
-            if employee.hours_left_this_month <= 0.06:
+            attendances = self.env['hr.attendance'].search([
+                ('employee_id', '=', employee.id),
+                ('check_out', '=', False),
+            ])
+            diff = 0
+            for attendance in attendances:
+                delta = now - attendance.check_in
+                diff = delta.total_seconds() / 3600.0
+            if (employee.hours_left_this_month - diff) <= 0.1:
                 tz = pytz.timezone(employee.tz or 'UTC')
                 now_tz = now_utc.astimezone(tz)
                 if not employee.last_attendance_id.check_out:
                     employee.last_attendance_id.check_out = datetime.datetime.now()
                 employee.has_reached_limit = True
+            else:
+                employee.has_reached_limit = False
 
     def _compute_hours_this_month(self):
         now = fields.Datetime.now()
@@ -117,17 +126,10 @@ class Attendance(models.Model):
         employee = super(Attendance, self).create(vals)
         return employee
 
-    def write(self, vals):
-        employee = super(Attendance, self).write(vals)
-        if employee:
-            print(employee)
-        return employee
-
     def split_entries(self):
         prev_day = datetime.datetime.today() - datetime.timedelta(days=1)
-        print('prev-day: ',prev_day)
         current = date.today() - timedelta(days = 0)
-        prev = date.today() - timedelta(days = 1)
+        prev = date.today() - timedelta(days = 2)
         attendances = self.env['hr.attendance'].sudo().search([('check_in', '>=', prev),
                                                                ('check_out', '>=', prev),
                                                                ('check_out', '<', current),
@@ -137,16 +139,15 @@ class Attendance(models.Model):
 
         hours = 0
         for attendance in attendances:
-            print('worked_hours: ',attendance.worked_hours)
             check_out = attendance.check_out
-            if attendance.worked_hours > 6.5:
+            worked_hours = attendance.worked_hours
+            if attendance.worked_hours > 6.0:
                 new_check_out = attendance.check_in + timedelta(hours=6)
-                print(attendance.check_in)
                 attendance.sudo().write({
                     'check_out': new_check_out,
                     'is_entry_splitted': True,
                 })
-                if new_check_out and check_out:
+                if new_check_out and check_out and worked_hours > 6.5:
                     new_check_in = new_check_out + timedelta(minutes=30)
                     delta = new_check_out - check_out
                     new_worked_hours = delta.total_seconds() / 3600.0
