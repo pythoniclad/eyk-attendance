@@ -36,7 +36,16 @@ class Employee(models.Model):
         now_utc = pytz.utc.localize(now)
         employees = self.env['hr.employee'].sudo().search([('last_check_in', '!=', False), ('last_check_out', '=', False)])
         for employee in employees:
-            if employee.hours_left_this_month <= 0.06:
+            attendances = self.env['hr.attendance'].search([
+                ('employee_id', '=', employee.id),
+                ('check_out', '=', False),
+            ])
+
+            hours = 0
+            for attendance in attendances:
+                delta = now - attendance.check_in
+                diff = delta.total_seconds() / 3600.0
+            if (employee.hours_left_this_month - diff) <= 0.1:
                 tz = pytz.timezone(employee.tz or 'UTC')
                 now_tz = now_utc.astimezone(tz)
                 if not employee.last_attendance_id.check_out:
