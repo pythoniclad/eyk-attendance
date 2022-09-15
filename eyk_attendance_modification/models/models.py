@@ -4,6 +4,7 @@ from odoo.exceptions import ValidationError
 from datetime import date, datetime, time
 from odoo import models, fields, api, exceptions, _
 from odoo.tools import float_round
+import base64
 from datetime import timedelta, date
 import datetime
 
@@ -39,7 +40,8 @@ class Employee(models.Model):
                 ('employee_id', '=', employee.id),
                 ('check_out', '=', False),
             ])
-            diff = 0
+
+            hours = 0
             for attendance in attendances:
                 delta = now - attendance.check_in
                 diff = delta.total_seconds() / 3600.0
@@ -126,8 +128,15 @@ class Attendance(models.Model):
         employee = super(Attendance, self).create(vals)
         return employee
 
+    def write(self, vals):
+        employee = super(Attendance, self).write(vals)
+        if employee:
+            print(employee)
+        return employee
+
     def split_entries(self):
         prev_day = datetime.datetime.today() - datetime.timedelta(days=1)
+        print('prev-day: ',prev_day)
         current = date.today() - timedelta(days = 0)
         prev = date.today() - timedelta(days = 2)
         attendances = self.env['hr.attendance'].sudo().search([('check_in', '>=', prev),
@@ -139,15 +148,17 @@ class Attendance(models.Model):
 
         hours = 0
         for attendance in attendances:
+            print('worked_hours: ',attendance.worked_hours)
             check_out = attendance.check_out
             worked_hours = attendance.worked_hours
             if attendance.worked_hours > 6.0:
                 new_check_out = attendance.check_in + timedelta(hours=6)
+                print(attendance.check_in)
                 attendance.sudo().write({
                     'check_out': new_check_out,
                     'is_entry_splitted': True,
                 })
-                if new_check_out and check_out and worked_hours > 6.5:
+                if new_check_out and check_out worked_hours > 6.5:
                     new_check_in = new_check_out + timedelta(minutes=30)
                     delta = new_check_out - check_out
                     new_worked_hours = delta.total_seconds() / 3600.0
