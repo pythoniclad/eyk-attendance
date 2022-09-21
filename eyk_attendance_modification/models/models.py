@@ -8,6 +8,21 @@ from datetime import timedelta, date
 import datetime
 
 
+class HrEmployeePublic(models.Model):
+    _inherit = "hr.employee.public"
+
+    resource_monthly_limit = fields.Float(related='employee_id.resource_monthly_limit')
+    has_reached_limit = fields.Boolean(related='employee_id.has_reached_limit')
+    hours_this_month = fields.Float(related='employee_id.hours_this_month')
+    hours_left_this_month = fields.Float(related='employee_id.hours_left_this_month')
+    hours_this_month_display = fields.Char(related='employee_id.hours_this_month_display')
+
+    total_day = fields.Char(related='employee_id.total_day')
+    total_hour = fields.Char(related='employee_id.total_hour')
+    present_day = fields.Char(related='employee_id.present_day')
+    date_from = fields.Date(related='employee_id.date_from')
+    date_to = fields.Date(related='employee_id.date_to')
+
 class Employee(models.Model):
     _inherit = 'hr.employee'
 
