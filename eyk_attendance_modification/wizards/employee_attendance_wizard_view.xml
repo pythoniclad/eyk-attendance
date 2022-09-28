@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attendance_employee_report" model="ir.ui.view">
+        <field name="name">hr.attendance.employee.report.form</field>
+        <field name="model">hr.attendance.employee.report</field>
+        <field name="arch" type="xml">
+            <form string ="Attendance Report">
+                <sheet>
+                    <group>
+                        <group groups="hr_attendance.group_hr_attendance_manager">
+                            <field name="employee_ids" widget="many2many_tags" />
+                        </group>
+                        <group>
+                            <field name="month" required='1'/>
+                            <field name="year" required='1'/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print" name="action_print" type='object' class="btn-primary"/>
+                        <button string="Cancel" special="cancel" />
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_attendance_employee_report" model="ir.actions.act_window">
+        <field name="name">Attendance Report</field>
+        <field name="res_model">hr.attendance.employee.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_attendance_employee_report"/>
+    </record>
+
+<!--    <menuitem id="menu_hr_attendance_report_default"-->
+<!--        name="Reporting"-->
+<!--        sequence="30"-->
+<!--        parent="hr_attendance.menu_hr_attendance_report"-->
+<!--        action="hr_attendance.hr_attendance_report_action"-->
+<!--        groups="hr_attendance.group_hr_attendance_user"/>-->
+
+    <menuitem id="sub_menu_attendance_employee_report"
+              name="Attendance Report" sequence="31"
+              parent='hr_attendance.menu_hr_attendance_root'
+              action="action_attendance_employee_report"/>
+</odoo>
