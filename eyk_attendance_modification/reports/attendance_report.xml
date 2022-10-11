@@ -63,29 +63,32 @@
                                                             </td>
                                                         </t>
                                                     </t>
-                                                    <t t-if="not o.type">
-                                                        <td>
-                                                            <span> </span>
-                                                        </td>
-                                                    </t>
-                                                    <t t-if="o.type">
-                                                        <t t-if="o.type">
-                                                            <td >
-                                                                <span t-field="o.type"/>
+                                                    <t t-if="o.worked_hours">
+                                                        <t t-if="o.worked_hours &gt;= 6.0">
+                                                            <td>
+                                                                <span>Work</span>
                                                             </td>
                                                         </t>
-                                                    </t>
-                                                    <t t-if="not o.worked_hours">
-                                                        <td>
-                                                            <span> </span>
-                                                        </td>
+                                                        <t t-elif="o.worked_hours &lt;= 0.1">
+                                                            <td>
+                                                                <span> </span>
+                                                            </td>
+                                                        </t>
+                                                        <t t-elif="o.worked_hours &lt;= 6.0">
+                                                            <td>
+                                                                <span>Break</span>
+                                                            </td>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <td>
+                                                                <span> </span>
+                                                            </td>
+                                                        </t>
                                                     </t>
                                                     <t t-if="o.worked_hours">
-                                                        <t t-if="o.worked_hours">
-                                                            <td >
-                                                                <span t-field="o.worked_hours" t-options='{"widget": "float_time"}'/>
-                                                            </td>
-                                                        </t>
+                                                        <td >
+                                                            <span t-field="o.worked_hours" t-options='{"widget": "float_time"}'/>
+                                                        </td>
                                                     </t>
                                                 </tr>
                                             </t>

@@ -131,7 +131,6 @@ class Attendance(models.Model):
     _inherit = "hr.attendance"
 
     is_entry_splitted = fields.Boolean('Is Split?', default=False)
-    type = fields.Selection([('break', 'Break'),('work', 'Work'),], string='Type')
 
     @api.model
     def create(self, vals):
@@ -166,7 +165,6 @@ class Attendance(models.Model):
                 attendance.sudo().write({
                     'check_out': new_check_out,
                     'is_entry_splitted': True,
-                    'type': 'work',
                 })
                 if new_check_out and check_out and worked_hours > 6.5:
                     new_check_in = new_check_out + timedelta(minutes=30)
@@ -177,5 +175,5 @@ class Attendance(models.Model):
                         'check_in': new_check_in,
                         'check_out': check_out,
                         'is_entry_splitted': True,
-                        'type': 'break',
                     })
+
