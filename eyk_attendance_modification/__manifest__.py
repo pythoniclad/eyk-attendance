@@ -1,7 +1,7 @@
 
 {
     "name": "Attendance Modifications",
-    "version": "15.1.0.0",
+    "version": "15.0.0.0",
     "depends": ["base", "hr", "hr_attendance"],
     "data": [
         'security/ir.model.access.csv',

@@ -131,6 +131,7 @@ class Attendance(models.Model):
     _inherit = "hr.attendance"
 
     is_entry_splitted = fields.Boolean('Is Split?', default=False)
+    type = fields.Selection([('break', 'Break'),('work', 'Work'),], string='Type')
 
     @api.model
     def create(self, vals):
@@ -138,20 +139,17 @@ class Attendance(models.Model):
             employee_id = self.env['hr.employee'].browse(vals.get("employee_id"))
             if employee_id:
                 if employee_id.has_reached_limit:
-                    if employee_id.name:
-                        raise ValidationError(_(str(employee_id.name) + " have reached monthly limit\nContact admin!"))
-                    else:
-                        raise ValidationError(_("You have reached your monthly limit\nContact your admin!"))
+                    raise ValidationError(_("You have reached your monthly limit\nContact your admin!"))
         employee = super(Attendance, self).create(vals)
         return employee
 
     def split_entries(self):
         prev_day = datetime.datetime.today() - datetime.timedelta(days=1)
         current = date.today() - timedelta(days = 0)
-        prev = date.today() - timedelta(days = 1)
+        prev = date.today() - timedelta(days = 2)
         attendances = self.env['hr.attendance'].sudo().search([('check_in', '>=', prev),
                                                                ('check_out', '>=', prev),
-                                                               ('check_out', '<=', current),
+                                                               ('check_out', '<', current),
                                                                ('check_in', '!=', False),
                                                                ('check_out', '!=', False),
                                                                ('is_entry_splitted', '=', False)])
@@ -165,6 +163,7 @@ class Attendance(models.Model):
                 attendance.sudo().write({
                     'check_out': new_check_out,
                     'is_entry_splitted': True,
+                    'type': 'work',
                 })
                 if new_check_out and check_out and worked_hours > 6.5:
                     new_check_in = new_check_out + timedelta(minutes=30)
@@ -175,5 +174,5 @@ class Attendance(models.Model):
                         'check_in': new_check_in,
                         'check_out': check_out,
                         'is_entry_splitted': True,
+                        'type': 'break',
                     })
-

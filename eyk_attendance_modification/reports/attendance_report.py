@@ -1,10 +1,5 @@
-
-from datetime import timedelta, date
-import calendar
-import dateutil.relativedelta
-from dateutil.relativedelta import relativedelta
-
 from odoo import models
+from datetime import datetime
 
 
 class CustomReport(models.AbstractModel):
@@ -24,12 +19,15 @@ class CustomReport(models.AbstractModel):
             attendances.append(attendance_ids)
             x = True if attendance_ids else False
             has_records.append(x)
+            # current_month_name = data['date_from'].strftime("%B")
+            # current_month_name = datetime.strptime(data['date_from'], "%B")
+            # print('month name: ', current_month_name)
         return {
             'docs': attendances,
             'employee_ids': emp_ids,
             'has_records': has_records,
-            'month': calendar.month_name[int(data['month'])],
-            'year': data['year'],
             'date_from': data['date_from'],
             'date_to': data['date_to'],
+            'month': data['month'],
+            'year': data['year'],
         }
