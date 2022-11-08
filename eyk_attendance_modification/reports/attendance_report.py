@@ -19,9 +19,6 @@ class CustomReport(models.AbstractModel):
             attendances.append(attendance_ids)
             x = True if attendance_ids else False
             has_records.append(x)
-            # current_month_name = data['date_from'].strftime("%B")
-            # current_month_name = datetime.strptime(data['date_from'], "%B")
-            # print('month name: ', current_month_name)
         return {
             'docs': attendances,
             'employee_ids': emp_ids,
