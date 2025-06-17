@@ -1,1 +1,1 @@
-<h3>Attendance Modifications module for EYK</h3>
+<h3>Attendance Modifications module for EYK (forcefx)</h3>
