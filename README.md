@@ -1,1 +1,1 @@
-<h3>Attendance Modifications</h3>
+<h3>Attendance Modifications module for EYK</h3>
